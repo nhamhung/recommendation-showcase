@@ -162,9 +162,9 @@ quarto render report/report.qmd
 
 ## Publish the report
 
-HTML: <https://nhamhung.github.io/Data-Science/recommendation_showcase/>
+HTML: <https://nhamhung.github.io/recommendation-showcase/>
 
-PDF: <https://nhamhung.github.io/Data-Science/recommendation_showcase/report.pdf>
+PDF: download `report/report.pdf` from this repository.
 
 The repository's `Publish portfolio reports` GitHub Actions workflow deploys
 the pre-rendered HTML and PDF to GitHub Pages alongside the Academic Success
