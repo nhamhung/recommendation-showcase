@@ -5,6 +5,7 @@ on:
     paths:
       - "report/**"
       - "docs/**"
+      - "app/requirements.txt"
       - ".github/workflows/pages.yml"
   push:
     branches: [main]
