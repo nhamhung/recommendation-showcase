@@ -1,0 +1,20 @@
+pandas>=2.0
+numpy>=1.24
+scikit-learn>=1.4
+joblib>=1.3
+streamlit>=1.35
+matplotlib>=3.8
+seaborn>=0.13
+jupyter>=1.0
+pytest>=8.0
+
+# Interactive charts (used throughout notebooks, report, and app)
+plotly>=5.20
+kaleido>=0.2.1
+
+# Models
+lightgbm>=4.0
+xgboost>=2.0
+
+# Model interpretability (SHAP)
+shap>=0.45

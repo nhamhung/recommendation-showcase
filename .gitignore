@@ -1,0 +1,28 @@
+# Project data & generated artifacts (regenerable — see README for how to fetch/build)
+data/content_based/raw/*
+!data/content_based/raw/.gitkeep
+data/content_based/processed/*
+!data/content_based/processed/.gitkeep
+data/collaborative/raw/*
+!data/collaborative/raw/.gitkeep
+data/collaborative/processed/*
+!data/collaborative/processed/.gitkeep
+submission.csv
+.env
+.streamlit/secrets.toml
+.venv/
+venv/
+_site/
+
+# Quarto working files. The rendered HTML/PDF are intentionally versioned so
+# GitHub Pages can publish them without downloading the multi-gigabyte datasets
+# and retraining the recommendation models on every deployment.
+/report/report.tex
+/report/.quarto/
+/report/report_files/
+
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+.DS_Store

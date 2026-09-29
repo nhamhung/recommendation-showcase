@@ -1,0 +1,7 @@
+repository_owner: nhamhhung
+repository_name: recommendation-showcase
+default_branch: main
+pages_url: https://nhamhhung.github.io/recommendation-showcase/
+streamlit_url: https://recommendation-showcase.streamlit.app
+streamlit_entrypoint: app/streamlit_app.py
+streamlit_secrets: []
