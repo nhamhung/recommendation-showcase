@@ -33,7 +33,7 @@ jobs:
           node-version: "22"
       - run: quarto render site
       - run: npx --yes http-server _site -p 4173 >/tmp/pages-server.log 2>&1 & npx --yes wait-on http://127.0.0.1:4173
-      - run: npx --yes pa11y-ci http://127.0.0.1:4173
+      - run: npx --yes pa11y-ci --config .pa11yci.json http://127.0.0.1:4173
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
@@ -55,4 +55,3 @@ jobs:
       - name: Deploy Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
