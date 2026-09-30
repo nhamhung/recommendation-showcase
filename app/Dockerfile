@@ -7,23 +7,12 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY app/requirements.txt app/requirements.txt
+RUN pip install --no-cache-dir -r app/requirements.txt
 
 COPY src/ src/
 COPY app/ app/
 COPY models/ models/
-# Both sides read their own catalog directly (track metadata for the
-# content-based side; songs/members/song_extra_info for the
-# collaborative side) — download them first, see the README's "Get the
-# data" section. Neither dataset may be freely redistributed publicly
-# (Kaggle competition/dataset terms) — the same caution as every other
-# project in this portfolio applies here, doubled.
-COPY data/content_based/raw/dataset.csv data/content_based/raw/dataset.csv
-COPY data/collaborative/raw/train.csv data/collaborative/raw/train.csv
-COPY data/collaborative/raw/songs.csv data/collaborative/raw/songs.csv
-COPY data/collaborative/raw/members.csv data/collaborative/raw/members.csv
-COPY data/collaborative/raw/song_extra_info.csv data/collaborative/raw/song_extra_info.csv
 
 EXPOSE 8501
 

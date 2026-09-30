@@ -35,18 +35,8 @@ from pages_src import (  # noqa: E402
     content_based_overview,
     content_based_recommend,
 )
-from recommendation_showcase.content_based import data as cb_data  # noqa: E402
-from recommendation_showcase.collaborative import data as coll_data  # noqa: E402
 
 st.set_page_config(page_title="Recommendation Systems Showcase", page_icon="🎶", layout="wide")
-
-if cb_data.using_demo_data() or coll_data.using_demo_data():
-    st.sidebar.info(
-        "Cloud demo mode: the trained models are real, while the app uses a "
-        "compact Spotify catalog sample and anonymized/synthetic KKBox demo "
-        "metadata. Clone the project and add the original Kaggle data to run "
-        "against the full datasets."
-    )
 
 pages = {
     "Content-Based (Spotify)": [

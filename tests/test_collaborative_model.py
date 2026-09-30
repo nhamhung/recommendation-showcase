@@ -3,6 +3,7 @@ synthetic panel instead of the real KKBox data.
 """
 
 import numpy as np
+
 from recommendation_showcase.collaborative import config, model
 from tests.test_collaborative_features import make_synthetic_panel
 
