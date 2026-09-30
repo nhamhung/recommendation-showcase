@@ -23,6 +23,7 @@ memory on a normal laptop: `train.csv` (7,377,418 rows) merged with
 seconds and under 1.5GB of RAM.
 """
 
+import os
 from pathlib import Path
 
 import pandas as pd
@@ -88,8 +89,17 @@ def _require_file(path: Path) -> Path:
     return path
 
 
+def using_sample_data() -> bool:
+    """Whether the compact Kaggle-derived KKBox tables are active."""
+    return config.DEMO_TRAIN_CSV.exists() and os.getenv("USE_FULL_KAGGLE_DATA", "").lower() not in {"1", "true", "yes"}
+
+
+def _active_path(full_path: Path, sample_path: Path) -> Path:
+    return sample_path if using_sample_data() else _require_file(full_path)
+
+
 def load_train() -> pd.DataFrame:
-    return pd.read_csv(_require_file(config.TRAIN_CSV))
+    return pd.read_csv(_active_path(config.TRAIN_CSV, config.DEMO_TRAIN_CSV))
 
 
 def load_test() -> pd.DataFrame:
@@ -97,15 +107,15 @@ def load_test() -> pd.DataFrame:
 
 
 def load_songs() -> pd.DataFrame:
-    return pd.read_csv(_require_file(config.SONGS_CSV))
+    return pd.read_csv(_active_path(config.SONGS_CSV, config.DEMO_SONGS_CSV), dtype={"genre_ids": "string"})
 
 
 def load_members() -> pd.DataFrame:
-    return pd.read_csv(_require_file(config.MEMBERS_CSV))
+    return pd.read_csv(_active_path(config.MEMBERS_CSV, config.DEMO_MEMBERS_CSV))
 
 
 def load_song_extra_info() -> pd.DataFrame:
-    return pd.read_csv(_require_file(config.SONG_EXTRA_INFO_CSV))
+    return pd.read_csv(_active_path(config.SONG_EXTRA_INFO_CSV, config.DEMO_SONG_EXTRA_INFO_CSV))
 
 
 def merge_side_tables(

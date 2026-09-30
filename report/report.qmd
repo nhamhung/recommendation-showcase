@@ -53,6 +53,11 @@ plt.rcParams.update({
 })
 ```
 
+::: {.callout-tip}
+## Interactive application
+[Open the Streamlit app](https://recommendation-showcase.streamlit.app){target="_blank"}
+:::
+
 # Introduction
 
 I wanted to work on recommendation for this project because it's a
