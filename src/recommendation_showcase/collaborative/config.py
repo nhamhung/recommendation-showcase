@@ -25,7 +25,6 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DATA_RAW_DIR = PROJECT_ROOT / "data" / "collaborative" / "raw"
 DATA_PROCESSED_DIR = PROJECT_ROOT / "data" / "collaborative" / "processed"
-DEMO_DATA_DIR = PROJECT_ROOT / "data" / "demo"
 MODELS_DIR = PROJECT_ROOT / "models"
 
 TRAIN_CSV = DATA_RAW_DIR / "train.csv"
@@ -35,11 +34,6 @@ MEMBERS_CSV = DATA_RAW_DIR / "members.csv"
 SONG_EXTRA_INFO_CSV = DATA_RAW_DIR / "song_extra_info.csv"
 SAMPLE_SUBMISSION_CSV = DATA_RAW_DIR / "sample_submission.csv"
 MODEL_PATH = MODELS_DIR / "collaborative_model.joblib"
-
-DEMO_TRAIN_CSV = DEMO_DATA_DIR / "collaborative_train.csv"
-DEMO_SONGS_CSV = DEMO_DATA_DIR / "collaborative_songs.csv"
-DEMO_MEMBERS_CSV = DEMO_DATA_DIR / "collaborative_members.csv"
-DEMO_SONG_EXTRA_INFO_CSV = DEMO_DATA_DIR / "collaborative_song_extra_info.csv"
 
 # --- Kaggle competition ---------------------------------------------------
 

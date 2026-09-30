@@ -16,11 +16,9 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DATA_RAW_DIR = PROJECT_ROOT / "data" / "content_based" / "raw"
 DATA_PROCESSED_DIR = PROJECT_ROOT / "data" / "content_based" / "processed"
-DEMO_DATA_DIR = PROJECT_ROOT / "data" / "demo"
 MODELS_DIR = PROJECT_ROOT / "models"
 
 TRACKS_CSV = DATA_RAW_DIR / "dataset.csv"
-DEMO_TRACKS_CSV = DEMO_DATA_DIR / "content_tracks.csv"
 MODEL_PATH = MODELS_DIR / "content_based_model.joblib"
 
 # --- Kaggle dataset ------------------------------------------------------

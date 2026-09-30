@@ -58,8 +58,6 @@ def render():
 
     search = st.text_input("Search for a track or artist", "")
     candidates = tracks_df
-    if "is_demo_seed" in candidates.columns:
-        candidates = candidates[candidates["is_demo_seed"]]
     if search:
         mask = tracks_df["track_name"].str.contains(search, case=False, na=False) | tracks_df[
             "artists"

@@ -18,3 +18,9 @@ xgboost>=2.0
 
 # Model interpretability (SHAP)
 shap>=0.45
+
+# Automatic dataset download on deployments without a pre-baked Docker image
+# (py7zr needed specifically for the collaborative-filtering/KKBox side —
+# its competition files are .7z-compressed, not plain-zipped)
+kaggle>=1.6
+py7zr>=0.21

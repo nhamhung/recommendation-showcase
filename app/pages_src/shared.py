@@ -5,6 +5,8 @@ content-based (Spotify) and collaborative-filtering (KKBox) sides.
 (including this one) is imported — see its docstring.
 """
 
+import os
+
 import pandas as pd
 import streamlit as st
 
@@ -22,6 +24,41 @@ from recommendation_showcase.collaborative import model as coll_model
 # instead (the same tradeoff academic_success makes for its own
 # expensive stacking-ensemble comparison).
 COLL_SWEEP_SAMPLE_SIZE = 300_000
+
+
+def _configure_kaggle_credentials() -> None:
+    """Wire Kaggle API credentials from Streamlit secrets into the
+    environment variables the `kaggle` package reads, so a deployment
+    without a pre-baked Docker image (e.g. Streamlit Community Cloud)
+    can fetch the datasets automatically on first load — see each
+    sub-package's `data._download_from_kaggle`. Note the KKBox
+    (collaborative-filtering) download is ~360MB compressed — likely
+    impractical on a constrained free-tier host regardless of whether
+    credentials are configured; see `collaborative/data.py`'s module
+    docstring. A no-op if real environment variables are already set
+    (e.g. running locally) or no `[kaggle]` secret is configured (falls
+    back to `~/.kaggle/kaggle.json` if present, or to the
+    manual-download error message if not).
+    """
+    if os.environ.get("KAGGLE_API_TOKEN") or (
+        os.environ.get("KAGGLE_USERNAME") and os.environ.get("KAGGLE_KEY")
+    ):
+        return
+    try:
+        token = st.secrets.get("KAGGLE_API_TOKEN")
+        if token:
+            os.environ["KAGGLE_API_TOKEN"] = token
+            return
+    except Exception:
+        pass
+    try:
+        os.environ["KAGGLE_USERNAME"] = st.secrets["kaggle"]["username"]
+        os.environ["KAGGLE_KEY"] = st.secrets["kaggle"]["key"]
+    except Exception:
+        pass
+
+
+_configure_kaggle_credentials()
 
 
 # --- Content-based (Spotify) -----------------------------------------------
@@ -71,8 +108,7 @@ def get_coll_members_df() -> pd.DataFrame:
 
 @st.cache_data(show_spinner="Loading a training sample (first load only)...")
 def get_coll_train_sample(n: int = COLL_SWEEP_SAMPLE_SIZE) -> pd.DataFrame:
-    full_train = coll_data.load_train()
-    train = full_train.sample(min(n, len(full_train)), random_state=coll_config.RANDOM_SEED)
+    train = coll_data.load_train().sample(n, random_state=coll_config.RANDOM_SEED)
     return coll_data.merge_side_tables(train)
 
 

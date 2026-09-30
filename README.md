@@ -52,7 +52,6 @@ fully separate in its own sub-package; only the presentation layer
 data/
   content_based/raw/         # Spotify dataset CSV (gitignored — see below)
   collaborative/raw/         # KKBox competition CSVs (gitignored)
-  demo/                      # compact hosted-app fallback (versioned)
 notebooks/
   01_content_based.ipynb
   02_collaborative_filtering.ipynb
@@ -134,46 +133,11 @@ docker build -t recommendation-showcase-app -f app/Dockerfile .
 docker run -p 8501:8501 recommendation-showcase-app
 ```
 
-When the original Kaggle files are absent, the app automatically enters cloud
-demo mode. It uses the same trained models with a compact Spotify catalog
-sample and anonymized/synthetic KKBox metadata, clearly labeled in the app.
-Full local datasets always take precedence when present.
-
-## Deploy to Streamlit Community Cloud
-
-The repository is ready for Community Cloud with no secrets required:
-
-- repository: `nhamhhung/recommendation-showcase`
-- branch: `main`
-- entrypoint: `app/streamlit_app.py`
-- Python: `3.12`
-- dependencies: `app/requirements.txt`
-
-In <https://share.streamlit.io>, select **Create app**, choose **Yup, I have an
-app**, and enter the values above. The committed demo assets keep the hosted
-app within Community Cloud's resource constraints; locally, adding the Kaggle
-files switches every page back to the full datasets.
-
 ## Render the research writeup
 
 ```bash
 quarto render report/report.qmd
 ```
-
-## Publish the report
-
-HTML: <https://nhamhung.github.io/recommendation-showcase/>
-
-PDF: download `report/report.pdf` from this repository.
-
-The repository's `Publish portfolio reports` GitHub Actions workflow deploys
-the pre-rendered HTML and PDF to GitHub Pages alongside the Academic Success
-report.
-
-The rendered artifacts are committed deliberately: rebuilding this report
-requires both large Kaggle datasets and a full model evaluation. After changing
-`report/report.qmd`, render it locally and commit the updated `report.html` and
-`report.pdf`; a push to `main` will publish them automatically.
 
 ## Run the tests
 
@@ -181,13 +145,14 @@ requires both large Kaggle datasets and a full model evaluation. After changing
 pytest tests/
 ```
 
-## Public deployment
-
-- GitHub Pages: <https://nhamhhung.github.io/recommendation-showcase/>
-- Streamlit: <https://recommendation-showcase.streamlit.app>
-- Clone/fork deployment guide: [`docs/SETUP_AND_DEPLOYMENT.md`](docs/SETUP_AND_DEPLOYMENT.md)
-
-This directory is published as its own repository and does not depend on the parent workspace.
-
 Tests for both sub-packages run against small synthetic data — no
 download needed, and they already pass without any real data.
+
+## Deploy
+
+The Streamlit app fetches its source data through the Kaggle API at runtime. Configure either KAGGLE_API_TOKEN or a [kaggle] secrets section containing username and key. The KKBox competition also requires accepted competition terms.
+
+- Repository: <https://github.com/nhamhhung/recommendation-showcase>
+- Report: <https://nhamhung.github.io/recommendation-showcase/>
+- Streamlit: <https://recommendation-showcase.streamlit.app>
+- Fork setup: [docs/SETUP_AND_DEPLOYMENT.md](docs/SETUP_AND_DEPLOYMENT.md)
