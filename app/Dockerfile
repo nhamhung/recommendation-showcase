@@ -13,6 +13,7 @@ RUN pip install --no-cache-dir -r app/requirements.txt
 COPY src/ src/
 COPY app/ app/
 COPY models/ models/
+COPY data/demo/ data/demo/
 
 EXPOSE 8501
 

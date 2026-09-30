@@ -40,6 +40,11 @@ def _configure_kaggle_credentials() -> None:
     back to `~/.kaggle/kaggle.json` if present, or to the
     manual-download error message if not).
     """
+    try:
+        if st.secrets.get("USE_FULL_KAGGLE_DATA"):
+            os.environ["USE_FULL_KAGGLE_DATA"] = "true"
+    except Exception:
+        pass
     if os.environ.get("KAGGLE_API_TOKEN") or (
         os.environ.get("KAGGLE_USERNAME") and os.environ.get("KAGGLE_KEY")
     ):
@@ -66,6 +71,10 @@ _configure_kaggle_credentials()
 
 @st.cache_resource
 def get_cb_recommender():
+    if cb_data.using_sample_data():
+        tracks = cb_data.load_tracks()
+        X, _ = cb_data.split_features_target(tracks)
+        return cb_model.ContentRecommender().fit(X)
     return cb_model.load_pipeline()
 
 
@@ -108,7 +117,8 @@ def get_coll_members_df() -> pd.DataFrame:
 
 @st.cache_data(show_spinner="Loading a training sample (first load only)...")
 def get_coll_train_sample(n: int = COLL_SWEEP_SAMPLE_SIZE) -> pd.DataFrame:
-    train = coll_data.load_train().sample(n, random_state=coll_config.RANDOM_SEED)
+    full = coll_data.load_train()
+    train = full.sample(min(n, len(full)), random_state=coll_config.RANDOM_SEED)
     return coll_data.merge_side_tables(train)
 
 

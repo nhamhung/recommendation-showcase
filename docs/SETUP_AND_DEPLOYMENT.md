@@ -19,7 +19,7 @@ streamlit run app/streamlit_app.py
 2. Push to your own public GitHub repository with `main` as the default branch.
 3. In Settings → Pages, select **GitHub Actions** as the source.
 4. In Streamlit Community Cloud, create a new app from your repository, branch `main`, file `app/streamlit_app.py`.
-5. Configure Kaggle access using either KAGGLE_API_TOKEN or a [kaggle] section with username and key. Accept the KKBox competition rules first.
+5. The bundled Kaggle-derived samples need no secret. To use full data, set `USE_FULL_KAGGLE_DATA=true`, configure either `KAGGLE_API_TOKEN` or a `[kaggle]` section with username and key, and accept the KKBox competition rules first.
 6. Wait for CI and Pages to pass, then record the URLs and revision in `docs/DEPLOYMENT_ACCEPTANCE.md`.
 
 Do not copy another owner's tokens, application URL, Pages URL, or secret values. GitHub Pages hosts static documentation; Streamlit Community Cloud runs the Python app.

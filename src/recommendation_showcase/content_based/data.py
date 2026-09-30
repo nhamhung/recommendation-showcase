@@ -8,6 +8,7 @@ deploying without a Docker image that already bakes the file in; see
 `app/pages_src/shared.py` for how deployed credentials get wired in).
 """
 
+import os
 from pathlib import Path
 
 import pandas as pd
@@ -50,6 +51,11 @@ def _require_file(path: Path) -> Path:
     return path
 
 
+def using_sample_data() -> bool:
+    """Whether the bundled Kaggle-derived catalog sample is active."""
+    return config.DEMO_TRACKS_CSV.exists() and os.getenv("USE_FULL_KAGGLE_DATA", "").lower() not in {"1", "true", "yes"}
+
+
 def load_tracks() -> pd.DataFrame:
     """Load the full tracks table, deduplicated and indexed by `track_id`.
 
@@ -59,7 +65,8 @@ def load_tracks() -> pd.DataFrame:
     kept, since the recommender treats each track as a single point in
     feature space regardless of which genre tag happened to be attached.
     """
-    df = pd.read_csv(_require_file(config.TRACKS_CSV))
+    path = config.DEMO_TRACKS_CSV if using_sample_data() else _require_file(config.TRACKS_CSV)
+    df = pd.read_csv(path)
     df = df.drop(columns=[c for c in df.columns if c.startswith("Unnamed")], errors="ignore")
     df = df.drop_duplicates(subset=config.ID_COL, keep="first")
     return df.set_index(config.ID_COL)

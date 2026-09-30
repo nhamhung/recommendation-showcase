@@ -150,7 +150,7 @@ download needed, and they already pass without any real data.
 
 ## Deploy
 
-The Streamlit app fetches its source data through the Kaggle API at runtime. Configure either KAGGLE_API_TOKEN or a [kaggle] secrets section containing username and key. The KKBox competition also requires accepted competition terms.
+The Streamlit app starts immediately from compact Spotify and KKBox samples sourced from Kaggle. Set `USE_FULL_KAGGLE_DATA=true` to fetch and use the complete datasets through the Kaggle API; configure either `KAGGLE_API_TOKEN` or a `[kaggle]` secrets section containing username and key. The KKBox competition also requires accepted competition terms.
 
 - Repository: <https://github.com/nhamhhung/recommendation-showcase>
 - Report: <https://nhamhung.github.io/recommendation-showcase/>
