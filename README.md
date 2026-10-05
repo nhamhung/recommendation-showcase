@@ -20,6 +20,18 @@ This project began as two separate portfolio entries
 here — two clean sub-packages sharing one project, one unified report,
 one app — once each half was independently verified working.
 
+## Prerequisites
+
+Install once, before Setup below:
+
+| Dependency | Why | Install |
+|---|---|---|
+| **Python 3.12** | This project's `.venv` is built against 3.12 — a different version may resolve incompatible package versions from `requirements.txt`. | [python.org/downloads](https://www.python.org/downloads/) or a version manager (e.g. `pyenv install 3.12`) |
+| **Quarto** | Renders `report/report.qmd` — a standalone binary, not a Python package, so `pip install` never gets it. | [quarto.org/docs/get-started](https://quarto.org/docs/get-started/) |
+| **Kaggle account** | Needed only for the complete datasets; the default Streamlit app uses bundled samples, and `pytest` uses synthetic data. The KKBox side is a competition — accept its rules on kaggle.com in a browser first, or its API download will 403. | Kaggle account → **Account → Create New API Token** → save as `~/.kaggle/kaggle.json`. See the [Kaggle API docs](https://www.kaggle.com/docs/api). |
+| **`p7zip`** (`7z`) | KKBox's competition files are `.7z`-compressed, not plain-zipped — needed to extract them. | `brew install p7zip` (macOS), `apt install p7zip-full` (Debian/Ubuntu), or see [7-zip.org](https://www.7-zip.org/) |
+| **Docker** (optional) | Only if you want to run the app in its pre-baked container instead of `streamlit run`. | [docker.com/get-started](https://www.docker.com/get-started/) |
+
 ## What's here
 
 | Deliverable | Where |
@@ -45,6 +57,33 @@ directly from both halves' own methodology sections. Everything
 approach-specific (data loading, feature engineering, evaluation) stays
 fully separate in its own sub-package; only the presentation layer
 (app, unified report) is genuinely shared.
+
+## Making changes
+
+Each sub-package is its own single source of truth, with no code shared
+between them beyond the app/report presentation layer:
+
+- `src/recommendation_showcase/content_based/` — `config.py`, `data.py`,
+  `features.py`, `model.py`, `interpretability.py`, `genre_families.py`.
+- `src/recommendation_showcase/collaborative/` — the same module set,
+  independent implementation.
+
+The edit loop (same shape for either sub-package):
+
+```bash
+# 1. Edit src/recommendation_showcase/<sub_package>/*.py
+
+# 2. Check it against that sub-package's tests (fast, synthetic data, no download needed)
+pytest tests/
+
+# 3. Retrain, so models/<sub_package>_model.joblib reflects your change
+python scripts/train_content_based.py     # or:
+python scripts/train_collaborative.py
+```
+
+The relevant `models/*.joblib` is what that sub-package's notebook, app
+pages, and report section all load — retraining is the one step that
+makes a model-code change visible everywhere else.
 
 ## Project layout
 
@@ -72,8 +111,8 @@ tests/                        # pytest tests for both sub-packages (synthetic da
 ## Setup
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
+python3.12 -m venv .venv          # use the 3.12 interpreter specifically
+source .venv/bin/activate         # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
@@ -85,7 +124,7 @@ either). Download both:
 ```bash
 # Spotify (a Kaggle dataset, not a competition)
 kaggle datasets download -d maharshipandya/-spotify-tracks-dataset -p data/content_based/raw
-unzip -o data/content_based/raw/spotify-tracks-dataset.zip -d data/content_based/raw
+unzip -o data/content_based/raw/-spotify-tracks-dataset.zip -d data/content_based/raw
 
 # KKBox (a real competition — accept its rules on kaggle.com first, in a browser)
 kaggle competitions download -c kkbox-music-recommendation-challenge -p data/collaborative/raw
@@ -94,6 +133,14 @@ cd data/collaborative/raw && for f in *.csv.7z; do 7z x -y "$f"; done && cd ../.
 ```
 
 ## Run the notebooks
+
+Both notebooks (and the Quarto report below) run on a named Jupyter
+kernel, `recommendation-showcase`. Register it once, from the active
+venv:
+
+```bash
+python -m ipykernel install --user --name recommendation-showcase
+```
 
 ```bash
 jupyter notebook notebooks/01_content_based.ipynb
@@ -135,9 +182,48 @@ docker run -p 8501:8501 recommendation-showcase-app
 
 ## Render the research writeup
 
+Requires the `recommendation-showcase` kernel registered above (`report.qmd`
+declares it via `jupyter: recommendation-showcase`):
+
 ```bash
 quarto render report/report.qmd
 ```
+
+This regenerates both `report/report.html` and `report/report.pdf` (PDF
+needs a LaTeX distribution — if you don't have one, run
+`quarto install tinytex` once). Render just one format when you don't need
+both:
+
+```bash
+quarto render report/report.qmd --to html
+quarto render report/report.qmd --to pdf
+```
+
+Live-preview while editing (auto-rerenders on save):
+
+```bash
+quarto preview report/report.qmd
+```
+
+A `.qmd` file is Markdown prose plus fenced Python code chunks
+(` ```{python} `/` ``` `), executed top to bottom by the kernel above, same
+as a notebook cell. Common per-chunk options (a `#|` comment, first line of
+the chunk): `#| echo: false` (hide this chunk's source code),
+`#| output: false` (suppress its output, e.g. a setup/import cell),
+`#| label: fig-foo` + `#| fig-cap: "..."` (name and caption a figure for
+cross-referencing). The [Quarto VS Code
+extension](https://marketplace.visualstudio.com/items?itemName=quarto.quarto)
+adds syntax highlighting and a one-click Render button if you're doing more
+than a one-line edit.
+
+Troubleshooting:
+
+| Symptom | Likely cause |
+|---|---|
+| `Jupyter engine failed ... kernel not found` | The `ipykernel install --name recommendation-showcase` step above hasn't been run yet. |
+| `ModuleNotFoundError` inside a code chunk | `quarto render` runs with its working directory set to `report/`, not the project root — check the chunk's `sys.path.insert(0, "../src")` points at the right relative path. |
+| Output looks stale after editing | Force a clean re-run: `quarto render report/report.qmd --execute-daemon-restart`. |
+| PDF render fails, HTML succeeds | Missing LaTeX — run `quarto install tinytex` once, then retry. |
 
 ## Run the tests
 
