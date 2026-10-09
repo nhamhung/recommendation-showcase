@@ -7,7 +7,7 @@ data/collaborative/raw/*
 !data/collaborative/raw/.gitkeep
 data/collaborative/processed/*
 !data/collaborative/processed/.gitkeep
-submission.csv
+submission*.csv
 .env
 .streamlit/secrets.toml
 .venv/

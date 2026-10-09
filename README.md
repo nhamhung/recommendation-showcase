@@ -161,6 +161,45 @@ python scripts/recommend.py "a track name"                          # content-ba
 python scripts/make_submission.py                                    # collaborative — real Kaggle submission
 ```
 
+## Leaderboard model (KKBox)
+
+Separate from the app's explainable collaborative model, a dedicated
+leaderboard pipeline reached **private AUC 0.74320 — would have ranked #4 of
+1,083** on the final KKBox leaderboard (late submission; the competition
+closed in 2017). Code: `src/recommendation_showcase/collaborative/leaderboard_*.py`
+and `scripts/make_leaderboard_submission.py`.
+
+```bash
+pip install -r requirements-leaderboard.txt        # adds pyarrow (and torch, only for the experimental NN)
+python scripts/make_leaderboard_submission.py --validate   # chronological validation AUC (~0.766)
+python scripts/make_leaderboard_submission.py              # full fit -> submission_leaderboard.csv (~20 min)
+kaggle competitions submit -c kkbox-music-recommendation-challenge -f submission_leaderboard.csv -m "message"
+```
+
+It always uses the **full** competition files (it forces `USE_FULL_KAGGLE_DATA`
+and refuses to run on anything smaller than 7,377,418 train / 2,556,790 test
+rows), never the app's demo tables. The first run builds a ~9.9M-row feature
+table (cached in `data/collaborative/processed/`); pass `--rebuild` after
+changing the features. Validation is chronological — fit on the first 80% of
+`train.csv`, score the last 20% — because the test set comes after train in
+time.
+
+| Submission | What changed | Validation AUC | Public | Private | Would rank |
+|---|---|---|---|---|---|
+| baseline | the app's one-hot pipeline | — | 0.62204 | 0.62587 | #865 |
+| v1 | LightGBM on raw IDs as categoricals, counts over train + test, row-order gap features | 0.732 | 0.71143 | 0.70946 | #23 |
+| v2 | + activity windows, block target encodings, stronger categorical smoothing | 0.745 | 0.72549 | 0.72385 | #8 |
+| v3 | + truncated-SVD user/song and user/artist embeddings | 0.758 | 0.73440 | 0.73244 | #6 |
+| v4 | + previous/next-song context, session windows, preference shares; heavy L2 regularisation | 0.765 | 0.74412 | 0.74229 | #4 |
+| **v5** | v4 at learning rate 0.1, 1,980 rounds (the script's default) | 0.766 | **0.74516** | **0.74320** | **#4** |
+
+v4's heavy-regularisation settings and several feature ideas (previous/next
+context, session windows, preference shares) were adapted from the
+[1st-place solution](https://github.com/lystdo/Codes-for-WSDM-CUP-Music-Rec-1st-place-solution)
+after reading its code; the implementation here is this project's own. The
+neural-network member (`leaderboard_nn.py`) is experimental and was not used
+in any submission.
+
 ## Run the app
 
 Eight pages total, grouped into two sidebar sections — **Content-Based
