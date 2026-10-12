@@ -35,8 +35,10 @@ from pages_src import (  # noqa: E402
     content_based_overview,
     content_based_recommend,
 )
+from theme import apply_theme  # noqa: E402
 
 st.set_page_config(page_title="Recommendation Systems Showcase", page_icon="🎶", layout="wide")
+apply_theme()
 
 pages = {
     "Content-Based (Spotify)": [
