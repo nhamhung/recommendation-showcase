@@ -29,29 +29,42 @@ from pages_src import (  # noqa: E402
     collaborative_feature_engineering,
     collaborative_model_insights,
     collaborative_overview,
-    collaborative_predict,
+    collaborative_demo,
     content_based_feature_engineering,
     content_based_model_insights,
     content_based_overview,
-    content_based_recommend,
+    content_demo,
 )
 from theme import apply_theme  # noqa: E402
 
 st.set_page_config(page_title="Recommendation Systems Showcase", page_icon="🎶", layout="wide")
 apply_theme()
 
+with st.sidebar:
+    st.markdown(
+        """
+        <div class="sidebar-brand">
+          <strong>🎶 Recommendation Lab</strong>
+          <span>Two datasets. Two recommendation strategies. One interactive comparison.</span>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
 pages = {
-    "Content-Based (Spotify)": [
-        st.Page(content_based_recommend.render, title="Recommend", icon="🎧", url_path="cb-recommend", default=True),
-        st.Page(content_based_overview.render, title="Overview", icon="📊", url_path="cb-overview"),
-        st.Page(content_based_feature_engineering.render, title="Feature Engineering", icon="🔧", url_path="cb-feature-engineering"),
-        st.Page(content_based_model_insights.render, title="Model Insights", icon="🧠", url_path="cb-model-insights"),
+    "Try the models": [
+        st.Page(content_demo.render, title="Find similar songs", icon="🎧", url_path="cb-recommend", default=True),
+        st.Page(collaborative_demo.render, title="Predict a replay", icon="🎯", url_path="coll-predict"),
     ],
-    "Collaborative Filtering (KKBox)": [
-        st.Page(collaborative_predict.render, title="Predict", icon="🎯", url_path="coll-predict"),
-        st.Page(collaborative_overview.render, title="Overview", icon="📊", url_path="coll-overview"),
-        st.Page(collaborative_feature_engineering.render, title="Feature Engineering", icon="🔧", url_path="coll-feature-engineering"),
-        st.Page(collaborative_model_insights.render, title="Model Insights", icon="🧠", url_path="coll-model-insights"),
+    "How content-based works": [
+        st.Page(content_based_overview.render, title="Spotify dataset", icon="📊", url_path="cb-overview"),
+        st.Page(content_based_feature_engineering.render, title="Audio features", icon="🔧", url_path="cb-feature-engineering"),
+        st.Page(content_based_model_insights.render, title="Model results", icon="🧠", url_path="cb-model-insights"),
+    ],
+    "How collaborative works": [
+        st.Page(collaborative_overview.render, title="KKBox dataset", icon="📊", url_path="coll-overview"),
+        st.Page(collaborative_feature_engineering.render, title="Listening signals", icon="🔧", url_path="coll-feature-engineering"),
+        st.Page(collaborative_model_insights.render, title="Model results", icon="🧠", url_path="coll-model-insights"),
     ],
 }
 

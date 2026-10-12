@@ -58,14 +58,48 @@ a { color: var(--theme-primary); text-underline-offset: .2em; }
   border: 1px solid var(--theme-primary);
   border-radius: .75rem;
   color: var(--theme-primary);
+  background: #ffffff;
   font-weight: 650;
   transition: transform .15s ease, box-shadow .15s ease;
+}
+.stButton > button p, .stButton > button span,
+.stDownloadButton > button p, .stDownloadButton > button span {
+  color: inherit !important;
+}
+.stButton > button[data-testid="stBaseButton-primary"],
+button[data-testid="stBaseButton-primary"] {
+  border-color: var(--theme-primary) !important;
+  color: #ffffff !important;
+  background: var(--theme-primary) !important;
+  box-shadow: 0 8px 22px rgba(var(--theme-primary-rgb), .2);
+}
+.stButton > button[data-testid="stBaseButton-primary"] p,
+.stButton > button[data-testid="stBaseButton-primary"] span,
+button[data-testid="stBaseButton-primary"] p,
+button[data-testid="stBaseButton-primary"] span {
+  color: #ffffff !important;
 }
 .stButton > button:hover, .stDownloadButton > button:hover {
   border-color: var(--theme-accent);
   color: var(--theme-ink);
+  background: #f8fafc;
   transform: translateY(-1px);
   box-shadow: 0 8px 20px rgba(var(--theme-primary-rgb), .15);
+}
+.stButton > button[data-testid="stBaseButton-primary"]:hover,
+button[data-testid="stBaseButton-primary"]:hover {
+  border-color: #312e81 !important;
+  color: #ffffff !important;
+  background: #312e81 !important;
+}
+.stButton > button:focus-visible, .stDownloadButton > button:focus-visible {
+  outline: 3px solid rgba(var(--theme-accent-rgb), .38) !important;
+  outline-offset: 2px;
+}
+.stButton > button:disabled, .stDownloadButton > button:disabled {
+  border-color: #cbd5e1 !important;
+  color: #64748b !important;
+  background: #f1f5f9 !important;
 }
 
 [data-baseweb="tab-list"] { gap: .4rem; border-bottom: 1px solid rgba(var(--theme-primary-rgb), .15); }
