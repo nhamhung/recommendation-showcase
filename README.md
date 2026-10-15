@@ -36,9 +36,10 @@ Install once, before Setup below:
 
 | Deliverable | Where |
 |---|---|
-| Two well-documented notebooks, one per approach | `notebooks/01_content_based.ipynb`, `notebooks/02_collaborative_filtering.ipynb` |
+| Two step-by-step notebooks, one per approach, covering data, features, baselines, modelling, honest evaluation, interpretability and usage | `notebooks/01_content_based.ipynb`, `notebooks/02_collaborative_filtering.ipynb` |
 | A multi-page Streamlit app — both recommenders, grouped by approach in the sidebar | `app/streamlit_app.py` + `app/pages_src/` (+ `app/Dockerfile`) |
 | One research-style writeup: a section per approach plus a head-to-head comparison | `report/report.qmd` |
+| A non-technical beginner's guide to both systems and their results | [Deployed guide](https://nhamhung.github.io/recommendation-showcase/beginners-guide.html) · `report/beginners_guide.qmd` |
 | Scripts proving each approach works end-to-end | `scripts/train_content_based.py` + `scripts/recommend.py`; `scripts/train_collaborative.py` + `scripts/make_submission.py` |
 
 Each sub-package (`content_based/`, `collaborative/`) is a complete,
@@ -146,6 +147,17 @@ python -m ipykernel install --user --name recommendation-showcase
 jupyter notebook notebooks/01_content_based.ipynb
 jupyter notebook notebooks/02_collaborative_filtering.ipynb
 ```
+
+Run each notebook from top to bottom. Both are read-only with respect to the
+project: they do not download data, overwrite models, retrain production
+artifacts or write leaderboard submissions into the repository.
+
+- **Content-based notebook:** runs on the full Spotify catalog and follows one
+  song from raw audio features through recommendation and interpretation.
+- **Collaborative notebook:** explores the full KKBox tables, uses a fixed-seed
+  time-ordered sample for the app pipeline, and explains the separate
+  leaderboard pipeline. The expensive leaderboard section is skipped when its
+  cached feature table is unavailable.
 
 ## Train from the command line
 
@@ -277,7 +289,8 @@ download needed, and they already pass without any real data.
 
 The Streamlit app starts immediately from compact Spotify and KKBox samples sourced from Kaggle. Set `USE_FULL_KAGGLE_DATA=true` to fetch and use the complete datasets through the Kaggle API; configure either `KAGGLE_API_TOKEN` or a `[kaggle]` secrets section containing username and key. The KKBox competition also requires accepted competition terms.
 
-- Repository: <https://github.com/nhamhhung/recommendation-showcase>
+- Repository: <https://github.com/nhamhung/recommendation-showcase>
 - Report: <https://nhamhung.github.io/recommendation-showcase/>
+- Beginner's guide: <https://nhamhung.github.io/recommendation-showcase/beginners-guide.html>
 - Streamlit: <https://recommendation-showcase.streamlit.app>
 - Fork setup: [docs/SETUP_AND_DEPLOYMENT.md](docs/SETUP_AND_DEPLOYMENT.md)
