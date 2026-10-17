@@ -3,7 +3,7 @@
 ## Local setup
 
 ```bash
-git clone https://github.com/nhamhhung/recommendation-showcase.git
+git clone https://github.com/nhamhung/recommendation-showcase.git
 cd recommendation-showcase
 python -m venv .venv
 source .venv/bin/activate

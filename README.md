@@ -1,5 +1,8 @@
 # Recommendation Systems Showcase
 
+> **New to Python, or just want to try it?** See [START_HERE.md](START_HERE.md): download the ZIP,
+> double-click `start_windows.bat` (Windows) or `start_mac.command` (macOS), and it sets everything up.
+
 A single project presenting **two genuinely different ways to solve
 "recommend a song"**, built end to end and compared head to head:
 
@@ -36,10 +39,9 @@ Install once, before Setup below:
 
 | Deliverable | Where |
 |---|---|
-| Two step-by-step notebooks, one per approach, covering data, features, baselines, modelling, honest evaluation, interpretability and usage | `notebooks/01_content_based.ipynb`, `notebooks/02_collaborative_filtering.ipynb` |
+| Two step-by-step guide notebooks, one per approach, written for a junior developer (data -> features -> baselines -> model -> honest evaluation -> interpretability -> usage; the KKBox one also walks through the leaderboard pipeline) | `notebooks/01_content_based.ipynb`, `notebooks/02_collaborative_filtering.ipynb` |
 | A multi-page Streamlit app — both recommenders, grouped by approach in the sidebar | `app/streamlit_app.py` + `app/pages_src/` (+ `app/Dockerfile`) |
 | One research-style writeup: a section per approach plus a head-to-head comparison | `report/report.qmd` |
-| A non-technical beginner's guide to both systems and their results | [Deployed guide](https://nhamhung.github.io/recommendation-showcase/beginners-guide.html) · `report/beginners_guide.qmd` |
 | Scripts proving each approach works end-to-end | `scripts/train_content_based.py` + `scripts/recommend.py`; `scripts/train_collaborative.py` + `scripts/make_submission.py` |
 
 Each sub-package (`content_based/`, `collaborative/`) is a complete,
@@ -148,16 +150,21 @@ jupyter notebook notebooks/01_content_based.ipynb
 jupyter notebook notebooks/02_collaborative_filtering.ipynb
 ```
 
-Run each notebook from top to bottom. Both are read-only with respect to the
-project: they do not download data, overwrite models, retrain production
-artifacts or write leaderboard submissions into the repository.
+Run each top to bottom; every part names the `src/` function it calls, so read
+the code alongside. Both notebooks are read-only with respect to the project:
+they never download data, never retrain or overwrite `models/*.joblib`, and
+never write submission files (the KKBox notebook's submission demo writes to a
+temporary folder only).
 
-- **Content-based notebook:** runs on the full Spotify catalog and follows one
-  song from raw audio features through recommendation and interpretation.
-- **Collaborative notebook:** explores the full KKBox tables, uses a fixed-seed
-  time-ordered sample for the app pipeline, and explains the separate
-  leaderboard pipeline. The expensive leaderboard section is skipped when its
-  cached feature table is unavailable.
+- **`01_content_based.ipynb`** (~1-2 min) needs `data/content_based/raw/dataset.csv`
+  and runs on the full catalog.
+- **`02_collaborative_filtering.ipynb`** (~4 min, under ~4 GB RAM) needs the five
+  KKBox CSVs. Exploration runs on all rows; the app-pipeline parts use a
+  fixed-seed 400k-row sample kept in time order; the leaderboard part trains on
+  a 20% sample of the cached `data/collaborative/processed/leaderboard_features.parquet`
+  (skipped if the cache is missing) and quotes the full-run results from this
+  README and the saved prediction files. It never imports `leaderboard_nn.py`
+  (PyTorch and LightGBM in one process can crash on macOS).
 
 ## Train from the command line
 

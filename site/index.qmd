@@ -10,9 +10,9 @@ This GitHub Pages site contains static documentation. The interactive Python app
 
 ## Use the project
 
-- [Source repository](https://github.com/nhamhhung/recommendation-showcase)
+- [Source repository](https://github.com/nhamhung/recommendation-showcase)
 - [Interactive Streamlit app](https://recommendation-showcase.streamlit.app)
-- [Clone, fork, and deployment guide](https://github.com/nhamhhung/recommendation-showcase/blob/main/docs/SETUP_AND_DEPLOYMENT.md)
+- [Clone, fork, and deployment guide](https://github.com/nhamhung/recommendation-showcase/blob/main/docs/SETUP_AND_DEPLOYMENT.md)
 
 ## Reproduce it
 
