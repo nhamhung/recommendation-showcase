@@ -1,3 +1,47 @@
+[project]
+name = "recommendation-showcase"
+version = "1.0.0"
+description = "Content-based (Spotify) and collaborative-filtering (KKBox) music recommenders, compared head to head"
+requires-python = ">=3.12,<3.13"
+# Exact versions the project was built and tested with (uv.lock pins everything else).
+dependencies = [
+    "pandas==3.0.6",
+    "numpy==2.5.3; sys_platform != 'darwin' or platform_machine != 'x86_64'",
+    # Intel Macs: numba (needed by shap) has no wheels after 0.62, which needs numpy < 2.4.
+    "numpy==2.3.5; sys_platform == 'darwin' and platform_machine == 'x86_64'",
+    "scipy==1.18.1",
+    "pyarrow==25.0.1",
+    "scikit-learn==1.9.1",
+    "joblib==1.6.0",
+    "lightgbm==4.7.0",
+    "xgboost==3.4.1",
+    "shap==0.52.0",
+    "matplotlib==3.11.2",
+    "seaborn==0.13.2",
+    "plotly==7.1.0",
+    "streamlit==1.64.0",
+    "kaggle==2.2.4",
+    "py7zr==1.1.3",
+    "jupyterlab==4.6.4",
+    "ipykernel==7.3.0",
+    "ipywidgets==8.1.9",  # progress bars in the notebooks (shap/tqdm)
+]
+
+[dependency-groups]
+dev = ["pytest==9.1.1", "ruff==0.16.10"]
+# Only for the experimental neural-network leaderboard member
+# (scripts/make_leaderboard_submission.py --model nn): uv sync --group leaderboard-nn
+leaderboard-nn = ["torch==2.14.1"]
+
+[tool.uv]
+package = false  # a project folder, not an installable library
+# 26.x ships no ready-built wheel for Intel Macs; 25.x does (needed by JupyterLab).
+constraint-dependencies = [
+    "argon2-cffi-bindings<26",
+    # numba 0.63+ ships no Intel-Mac wheels; 0.62 is the last that does (see the numpy pin above).
+    "numba>=0.62.1; sys_platform == 'darwin' and platform_machine == 'x86_64'",
+]
+
 [tool.ruff]
 target-version = "py311"
 line-length = 100

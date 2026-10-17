@@ -26,3 +26,8 @@ __pycache__/
 .pytest_cache/
 .ipynb_checkpoints/
 .DS_Store
+
+# Local Jupyter kernels/settings created by the launcher (scripts/launch.py)
+.jupyter_data/
+# OpenMP runtime the launcher fetches on Macs without Homebrew libomp
+.libomp/
